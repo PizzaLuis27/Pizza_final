@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizza Reservierung</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="logo-container">
+    <img src="{{ url_for('static', filename='logo.jpeg') }}" alt="Mein Logo">
+    </div>
+    <button id="admin-button">⚙️</button>
+    <h1>Pizza Reservierung</h1>
+    <div id="slots">
+        {% for time, status in time_slots.items() %}
+            <div class="time-slot {{ status }}" data-time="{{ time }}">{{ time }}</div>
+        {% endfor %}
+    </div>
+    <footer>
+        <p>Kontakt: <a href="mailto:luis.r.mueller@icloud.com">luis.r.mueller@icloud.com</a></p>
+        <p>Instagram: <a href="https://instagram.com/pizzacraft._frauenfeld" target="_blank">@Pizzacraft Frauenfeld</a></p>
+        <p>Dies ist eine Website zur Reservation der Abholzeiten von meinem Pizzastand. Wenn Sie fragen haben oder ihre Reservierung stornieren möchten, können Sie mich ganz einfach per Mail oder Instagram kontaktieren.</p>
+    </footer>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

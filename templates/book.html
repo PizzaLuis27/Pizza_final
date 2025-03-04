@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Pizza bestellen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Pizza Bestellen</h1>
+    <table>
+        {% for hour in range(11, 14) %}
+            {% for minute in range(0, 60, 10) %}
+                {% set time = "%02d:%02d" % (hour, minute) %}
+                <tr>
+                    <td class="{{ 'booked' if time in orders else 'free' }}"
+                        onclick="bookTime('{{ time }}')" id="{{ time }}">
+                        {{ time }}
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+    </table>
+
+    <div id="orderForm" style="display:none;">
+        <h3>Bestellung für <span id="selectedTime"></span></h3>
+        <input type="text" id="name" placeholder="Name">
+        <input type="number" id="pizzas" placeholder="Anzahl Pizzen">
+        <button onclick="submitOrder()">Bestellen</button>
+    </div>
+
+    <script>
+        function bookTime(time) {
+            if (document.getElementById(time).classList.contains("booked")) return;
+            document.getElementById("selectedTime").innerText = time;
+            document.getElementById("orderForm").style.display = "block";
+        }
+
+        function submitOrder() {
+            let name = document.getElementById("name").value;
+            let pizzas = document.getElementById("pizzas").value;
+            let time = document.getElementById("selectedTime").innerText;
+
+            fetch("/order", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({name, pizzas, time})
+            }).then(response => response.json()).then(data => {
+                if (data.success) location.reload();
+                else alert(data.error);
+            });
+        }
+    </script>
+</body>
+</html>
