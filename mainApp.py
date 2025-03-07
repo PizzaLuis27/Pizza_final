@@ -1,3 +1,14 @@
+import sqlite3
+from flask import Flask, render_template, request, jsonify
+
+app = Flask(__name__)
+
+# Verbindung zur SQLite-Datenbank erstellen
+def get_db_connection():
+    conn = sqlite3.connect("database.db")  # Erstellt die Datei database.db
+    conn.row_factory = sqlite3.Row
+    return conn
+
 import os
 from flask import Flask, render_template, request, jsonify
 
@@ -17,31 +28,36 @@ def index():
     return render_template('index.html', time_slots=time_slots, bookings=bookings)
 
 
-@app.route('/book', methods=['POST'])
-def book():
+@app.route("/order", methods=["POST"])
+def order():
     data = request.json
-    time = data.get('time')
-    name = data.get('name')
-    pizzas = data.get('pizzas')
-    contact = data.get('contact')
-    if time_slots.get(time) == "red":
-        return jsonify({"status": "error", "message": "Dieses Feld wurde schon reserviert!"})
+    name = data["name"]
+    pizzas = data["pizzas"]
+    time = data["time"]
 
-    time_slots[time] = "red"
-    bookings[time] = {"name": name, "pizzas": pizzas, "contact": contact}  # Fix: contact wird jetzt gespeichert
+    conn = get_db_connection()
+    try:
+        conn.execute("INSERT INTO orders (name, pizzas, time) VALUES (?, ?, ?)", (name, pizzas, time))
+        conn.commit()
+        success = True
+    except sqlite3.IntegrityError:
+        success = False  # Falls der Slot schon gebucht ist
+    conn.close()
 
-    return jsonify({"status": "success", "message": "Reservierung erfolgreich!"})
+    return jsonify({"success": success})
 
 
-@app.route('/admin', methods=['POST'])
-def admin():
-    data = request.json
-    password = data.get('password')
 
-    if password != ADMIN_PASSWORD:
-        return jsonify({"status": "error", "message": "Falsches Passwort!"})
+@app.route("/")
+def index():
+    conn = get_db_connection()
+    orders = conn.execute("SELECT time FROM orders").fetchall()
+    conn.close()
 
-    return jsonify({"status": "success", "bookings": bookings})
+    # Liste mit gebuchten Zeiten erstellen
+    booked_times = {order["time"] for order in orders}
+    return render_template("book.html", orders=booked_times)
+
 
 
 @app.route('/cancel', methods=['POST'])
@@ -62,4 +78,21 @@ def cancel():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
+def create_table():
+    conn = get_db_connection()
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS orders (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            pizzas INTEGER NOT NULL,
+            time TEXT NOT NULL UNIQUE
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+# Tabelle beim Start erstellen
+create_table()
+
 
