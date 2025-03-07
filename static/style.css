@@ -2,84 +2,58 @@ body {
     font-family: Arial, sans-serif;
     text-align: center;
     background-color: #f4f4f4;
-    color: #333;
     margin: 0;
     padding: 0;
 }
 
 h1 {
+    color: #333;
+}
+
+.logo-container {
     margin-top: 20px;
+}
+
+.logo-container img {
+    width: 150px;
 }
 
 #slots {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    max-width: 600px;
-    margin: 20px auto;
+    margin-top: 20px;
 }
 
 .time-slot {
-    display: inline-block;
-    width: 90px;
-    padding: 15px;
-    margin: 5px;
-    border-radius: 8px;
-    font-weight: bold;
-    text-align: center;
+    width: 100px;
+    height: 50px;
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background 0.3s ease-in-out;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 16px;
 }
 
 .green {
-    background-color: #4CAF50;
-    color: white;
+    background-color: lightgreen;
 }
 
 .red {
-    background-color: #FF3B3B;
+    background-color: red;
     color: white;
 }
 
-#admin-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 20px;
+button {
+    padding: 10px;
+    margin-bottom: 20px;
     cursor: pointer;
-    transition: transform 0.2s ease-in-out;
-}
-
-#admin-button:hover {
-    transform: scale(1.1);
 }
 
 footer {
     margin-top: 30px;
-    padding: 10px;
-    background-color: #222;
-    color: white;
-    font-size: 14px;
-}
-
-footer a {
-    color: #4CAF50;
-    text-decoration: none;
-}
-
-footer a:hover {
-    text-decoration: underline;
-}
-.logo-container {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-}
-
-.logo-container img {
-    height: 150px; /* Größe des Logos anpassen */
-    width: auto;
+    padding: 20px;
+    background-color: #ddd;
 }

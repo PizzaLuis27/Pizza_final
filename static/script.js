@@ -25,11 +25,10 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             fetch("/book", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ time: time, name: name, pizzas: pizzas, contact: contact }) // Fix: contact wird explizit gesendet
-})
-
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ time: time, name: name, pizzas: pizzas, contact: contact })
+            })
             .then(response => response.json())
             .then(data => {
                 if (data.status === "success") {
@@ -53,8 +52,8 @@ document.addEventListener("DOMContentLoaded", function () {
             if (data.status === "success") {
                 let bookings = "Buchungen:\n";
                 for (const [time, info] of Object.entries(data.bookings)) {
-    bookings += `${time}: ${info.name} - ${info.pizzas} Pizzen - Kontakt: ${info.contact || "Keine Kontaktdaten"}\n`;
-}
+                    bookings += `${time}: ${info.name} - ${info.pizzas} Pizzen - Kontakt: ${info.contact || "Keine Kontaktdaten"}\n`;
+                }
                 alert(bookings);
             } else {
                 alert(data.message);
